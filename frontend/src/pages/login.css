@@ -1,0 +1,34 @@
+/* Full-page background */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  font-family: Arial, sans-serif;
+}
+
+/* Login card */
+.login-box {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Title */
+.login-box h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+/* Footer */
+.login-box .footer {
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  color: #666;
+}

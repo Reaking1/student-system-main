@@ -1,0 +1,38 @@
+/* src/pages/Reports.css */
+
+.reports-page {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.reports-page h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.report-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.report-links a {
+  display: inline-block;
+  padding: 10px 15px;
+  background: #2563eb;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  text-align: center;
+  transition: background 0.3s;
+}
+
+.report-links a:hover {
+  background: #1d4ed8;
+}

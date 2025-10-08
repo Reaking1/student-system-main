@@ -1,0 +1,59 @@
+/* src/components/StudentTable.css */
+
+.student-table {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.student-table h2 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.student-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.student-table th,
+.student-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.student-table th {
+  background: #f4f4f4;
+}
+
+.student-table button {
+  margin-right: 5px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.student-table button:first-of-type {
+  background: #2563eb;
+  color: #fff;
+}
+
+.student-table button:last-of-type {
+  background: #dc2626;
+  color: #fff;
+}
+
+.student-table button:hover {
+  opacity: 0.9;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
