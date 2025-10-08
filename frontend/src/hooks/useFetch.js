@@ -11,24 +11,35 @@ export function useFetch(url, options = {}, dependencies = []) {
 
     try {
       const response = await fetch(url, options);
-      const result = await response.json();
+
+      // Check if response is JSON
+      const contentType = response.headers.get("content-type");
+      let result;
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json();
+      } else {
+        const text = await response.text();
+        throw new Error(
+          `Expected JSON, got something else. Response: ${text.substring(0, 200)}`
+        );
+      }
 
       if (!response.ok) {
         throw new Error(result.message || "Fetch failed");
       }
 
       setData(result);
-      setLoading(false);
     } catch (err) {
       setError(err);
+    } finally {
       setLoading(false);
     }
-  }, [url, JSON.stringify(options)]); // stringify options to track changes
+  }, [url, JSON.stringify(options)]);
 
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies); // allow dynamic refetch based on dependencies
+  }, dependencies);
 
   return { data, loading, error, refetch: fetchData };
 }

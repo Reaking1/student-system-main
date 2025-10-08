@@ -2,7 +2,7 @@
 // backend/config.php
 
 define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'uni_sis');
+define('DB_NAME', 'studentmgm');
 define('DB_USER', 'root');       // replace with your MySQL username
 define('DB_PASS', '');   // replace with your MySQL password
 

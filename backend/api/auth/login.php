@@ -1,7 +1,7 @@
 <?php
 // backend/api/auth/login.php
 
-require_once __DIR__ . '/../../config/cors.php'; // CORS headers first
+require_once __DIR__ . '/../../config/cors.php'; // CORS headers
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../db.php';
@@ -30,14 +30,7 @@ if (!$user || !password_verify($password, $user['password'])) {
     exit;
 }
 
-// Optional: allow only admin login
-if ($user['role'] !== 'admin') {
-    http_response_code(403);
-    echo json_encode(['status' => 'error', 'message' => 'Access denied: not an admin']);
-    exit;
-}
-
-// Generate a simple token
+// Generate a simple token (for session/auth)
 $token = base64_encode(random_bytes(32));
 
 // Store token in sessions table
@@ -55,6 +48,7 @@ echo json_encode([
     'user' => [
         'id' => $user['id'],
         'username' => $user['username'],
-        'role' => $user['role']
+        'role' => $user['role'],       // 'admin' or 'student'
+        'student_id' => $user['student_id'] ?? null
     ]
 ]);

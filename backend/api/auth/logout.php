@@ -1,11 +1,13 @@
 <?php
-// backend/api/auth/logout.php
 header("Content-Type: application/json");
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../../middleware/auth_middleware.php';
 
-$user = checkAuth(); // from auth_middleware.php, returns user info
+// Get authenticated user
+$user = checkAuth($pdo); // now returns user info
+
+// Remove token from sessions table
 $headers = getallheaders();
 $authHeader = $headers['Authorization'] ?? '';
 preg_match('/Bearer\s(\S+)/', $authHeader, $matches);

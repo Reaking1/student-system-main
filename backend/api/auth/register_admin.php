@@ -15,31 +15,31 @@ $password = trim($data['password'] ?? '');
 // Basic validation
 if ($username === '' || $password === '') {
     http_response_code(400);
-    echo json_encode(['status'=>'error','message'=>'Username and password required']);
+    echo json_encode(['status' => 'error', 'message' => 'Username and password required']);
     exit;
 }
 
 // Optional: enforce minimum password length
 if (strlen($password) < 6) {
     http_response_code(400);
-    echo json_encode(['status'=>'error','message'=>'Password must be at least 6 characters long']);
+    echo json_encode(['status' => 'error', 'message' => 'Password must be at least 6 characters long']);
     exit;
 }
 
-// Check if username already exists
-$stmt = $pdo->prepare("SELECT id FROM admins WHERE username = :username");
+// Check if username already exists in users table
+$stmt = $pdo->prepare("SELECT id FROM users WHERE username = :username LIMIT 1");
 $stmt->execute([':username' => $username]);
 if ($stmt->fetch()) {
     http_response_code(409);
-    echo json_encode(['status'=>'error','message'=>'Username already exists']);
+    echo json_encode(['status' => 'error', 'message' => 'Username already exists']);
     exit;
 }
 
 // Hash the password
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-// Insert new admin
-$stmt = $pdo->prepare("INSERT INTO admins (username, password) VALUES (:username, :password)");
+// Insert new admin into users table
+$stmt = $pdo->prepare("INSERT INTO users (username, password, role) VALUES (:username, :password, 'admin')");
 $success = $stmt->execute([
     ':username' => $username,
     ':password' => $hashedPassword
@@ -51,10 +51,11 @@ if ($success) {
         'message' => 'Admin registered successfully',
         'admin' => [
             'id' => $pdo->lastInsertId(),
-            'username' => $username
+            'username' => $username,
+            'role' => 'admin'
         ]
     ]);
 } else {
     http_response_code(500);
-    echo json_encode(['status'=>'error','message'=>'Failed to register admin']);
+    echo json_encode(['status' => 'error', 'message' => 'Failed to register admin']);
 }

@@ -1,31 +1,56 @@
-const API_URL = "http://localhost/student-system/backend/api/auth";
+// src/services/authService.js
 
-// authService.js
+// Base URLs
+const API_BASE_URL = "http://localhost/student-system-main/backend/api";
+const AUTH_API_URL = `${API_BASE_URL}/auth`;
+
+// --- LOGIN ---
 export async function login(username, password) {
-  const res = await fetch("http://localhost/student-system/backend/api/auth/login.php", {
+  const res = await fetch(`${AUTH_API_URL}/login.php`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-    credentials: "include"
+    body: JSON.stringify({ username, password })
   });
 
   const data = await res.json();
-  if (data.status === "success") {
-    // 🔑 Save auth state
-    localStorage.setItem("auth", JSON.stringify(data));
+
+  if (data.status === "success" && data.token) {
+    // Save token + user info in localStorage
+    localStorage.setItem(
+      "auth",
+      JSON.stringify({
+        token: data.token,
+        user: data.user
+      })
+    );
   }
+
   return data;
 }
 
-export function logout() {
-  localStorage.removeItem("auth");
-  return fetch("http://localhost/student-system/backend/api/auth/logout.php", {
+// --- LOGOUT ---
+export async function logout() {
+  const auth = getStoredAuth();
+  if (!auth?.token) return;
+
+  await fetch(`${AUTH_API_URL}/logout.php`, {
     method: "POST",
-    credentials: "include"
+    headers: {
+      "Authorization": `Bearer ${auth.token}`
+    }
   });
+
+  localStorage.removeItem("auth");
 }
 
+// --- GET STORED AUTH ---
 export function getStoredAuth() {
   const auth = localStorage.getItem("auth");
   return auth ? JSON.parse(auth) : null;
+}
+
+// --- GET AUTH HEADER ---
+export function getAuthHeader() {
+  const auth = getStoredAuth();
+  return auth?.token ? { "Authorization": `Bearer ${auth.token}` } : {};
 }
