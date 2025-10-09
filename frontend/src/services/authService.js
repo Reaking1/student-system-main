@@ -12,15 +12,24 @@ export async function login(username, password) {
     body: JSON.stringify({ username, password })
   });
 
-  const data = await res.json();
+  // In case backend throws PHP errors (HTML), guard parsing
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error("Invalid response from server — check backend PHP errors.");
+  }
 
-  if (data.status === "success" && data.token) {
-    // Save token + user info in localStorage
+  if (data.status === "success" && (data.token || data.access_token)) {
+    // Normalize token field name
+    const token = data.token || data.access_token;
+
+    // Save token + user info
     localStorage.setItem(
       "auth",
       JSON.stringify({
-        token: data.token,
-        user: data.user
+        token,
+        user: data.user || null
       })
     );
   }

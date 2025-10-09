@@ -9,6 +9,8 @@ require_once __DIR__ . '/../../middleware/validation.php';
 
 // Get input data
 $data = json_decode(file_get_contents("php://input"), true);
+error_log("Login raw input: " . file_get_contents("php://input"));
+
 $username = trim($data['username'] ?? '');
 $password = trim($data['password'] ?? '');
 

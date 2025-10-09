@@ -1,6 +1,6 @@
 import { getStoredAuth } from "./authService";
 
-const API_URL = "http://localhost/student-system/backend/api/students";
+const API_URL = "http://localhost/student-system-main/backend/api/students";
 
 function getAuthHeader() {
   const auth = getStoredAuth();
@@ -19,13 +19,18 @@ export async function getAllStudents() {
 
 // --- Get single student by ID ---
 export async function getStudentById(studentId) {
+  console.log("Fetching student with ID:", studentId);
+
   const res = await fetch(`${API_URL}/get.php?id=${studentId}`, {
     headers: getAuthHeader()
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Failed to fetch student");
   return data;
+
+
 }
+
 
 // --- Register a new student ---
 export async function registerStudent(studentData) {
@@ -74,7 +79,7 @@ export async function deleteStudent(studentId) {
 
 // --- Download profile report PDF ---
 export async function downloadProfileReport(studentId) {
-  const res = await fetch(`http://localhost/student-system/backend/api/reports/profile_report.php?id=${studentId}`, {
+  const res = await fetch(`http://localhost/student-system-main/backend/api/reports/profile_report.php?id=${studentId}`, {
     headers: getAuthHeader()
   });
 

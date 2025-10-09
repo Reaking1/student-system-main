@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { deleteStudent, getStudentById } from "../services/studentService";
+import { deleteStudent, getAllStudents,  } from "../services/studentService";
 import './StudentTable.css'
 
 
@@ -12,7 +12,7 @@ const StudentTable = () => {
     const fetchStudents = async () => {
         try {
             setLoading(true);
-            const data = await getStudentById();
+            const data = await getAllStudents();
             setStudents(data);
         } catch (err) {
             setError(err.message || "Failed to fetch students");
