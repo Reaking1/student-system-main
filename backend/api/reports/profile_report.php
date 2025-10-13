@@ -49,7 +49,8 @@ $pdf->Cell(50,8,'Email:',0,0);
 $pdf->Cell(0,8,$student['email'],0,1);
 
 $pdf->Cell(50,8,'Date of Birth:',0,0);
-$pdf->Cell(0,8,$student['dob'],0,1);
+$pdf->Cell(0,8,$student['date_of_birth'],0,1);
+
 
 $pdf->Ln(5);
 

@@ -1,4 +1,3 @@
-// src/pages/Reports.jsx
 import React from "react";
 import "./Reports.css";
 
@@ -7,8 +6,11 @@ const Reports = ({ student }) => {
     return <p>No student data available. Please log in.</p>;
   }
 
-  const profileReportUrl = `http://localhost/student-system/backend/api/reports/profile_report.php?student_id=${student.id}`;
-  const registrationSlipUrl = `http://localhost/student-system/backend/api/reports/registration_slip.php?student_id=${student.id}`;
+  // ✅ Corrected the backend path to match your folder structure
+  const baseUrl = "http://localhost/student-system-main/backend/api/reports";
+
+  const profileReportUrl = `${baseUrl}/profile_report.php?student_id=${student.id}`;
+  const registrationSlipUrl = `${baseUrl}/registration_slip.php?student_id=${student.id}`;
 
   return (
     <div className="reports-page">
