@@ -16,10 +16,10 @@ if ($student_id <= 0) {
 
 // Fetch student + course
 $stmt = $pdo->prepare("
-    SELECT s.*, c.code AS course_code, c.name AS course_name
+    SELECT s.*, c.course_code, c.course_name
     FROM students s
     JOIN courses c ON s.course_id = c.id
-    WHERE s.id=:id
+    WHERE s.id = :id
 ");
 $stmt->execute([':id' => $student_id]);
 $student = $stmt->fetch();
