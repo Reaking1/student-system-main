@@ -1,21 +1,190 @@
-/* src/pages/AdminDashboard.css */
+/* ===== AdminDashboard.css ===== */
 
+/* General dashboard container */
 .admin-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
 .admin-dashboard h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  color: #1f2937;
 }
 
 .error {
-  color: red;
+  color: #dc2626;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Each section of dashboard */
+.dashboard-section {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.dashboard-section h2 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+/* Form sections */
+.form-section {
+  background-color: #ffffff;
+  padding: 15px 20px;
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+.form-section h3 {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+}
+
+.form-section input,
+.form-section select,
+.form-section button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  box-sizing: border-box;
+}
+
+.form-section button {
+  background-color: #2563eb;
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.form-section button:hover {
+  background-color: #1e40af;
+}
+
+/* Profile Card Section */
+.profile-card-section {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-top: 20px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.profile-card-section h2 {
   margin-bottom: 15px;
 }
 
-.form-section {
-  margin-top: 40px;
-  padding: 20px;
-  border-top: 1px solid #ddd;
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+thead {
+  background-color: #e5e7eb;
+}
+
+thead th {
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 2px solid #d1d5db;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+table button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 5px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: 0.2s;
+}
+
+table button:hover {
+  opacity: 0.9;
+}
+
+table button:first-child {
+  background-color: #10b981; /* Edit */
+  color: white;
+}
+
+table button:last-child {
+  background-color: #ef4444; /* Delete */
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 10px;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    margin-bottom: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px;
+  }
+
+  tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border: none;
+  }
+
+  tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+  }
+
+  .form-section input,
+  .form-section select,
+  .form-section button {
+    width: 100%;
+  }
 }

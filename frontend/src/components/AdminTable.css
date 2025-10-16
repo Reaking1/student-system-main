@@ -1,0 +1,94 @@
+.admin-table {
+  background: #ffffff;
+  padding: 25px;
+  margin: 30px auto;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+  transition: box-shadow 0.3s ease;
+}
+
+.admin-table:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table h3 {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #007bff;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+
+.admin-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.admin-table thead {
+  background: #007bff;
+  color: white;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.admin-table tbody tr:hover {
+  background-color: #f1f9ff;
+}
+
+.admin-table button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  margin-right: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.admin-table button:first-of-type {
+  background-color: #ffc107;
+  color: #fff;
+}
+
+.admin-table button:first-of-type:hover {
+  background-color: #e0a800;
+}
+
+.admin-table button:last-of-type {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.admin-table button:last-of-type:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .admin-table {
+    padding: 15px;
+  }
+
+  .admin-table table {
+    font-size: 0.85rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 10px;
+  }
+}

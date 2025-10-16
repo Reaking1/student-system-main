@@ -42,7 +42,7 @@ const AdminEditForm = ({ admin, onUpdate, onClose }) => {
         alert(data.message || "Failed to update admin");
       }
     } catch (err) {
-      alert("Server error while updating admin");
+      console.log(err.message("Server error while updating admin"))
     }
   };
 

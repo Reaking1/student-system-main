@@ -33,7 +33,7 @@ const AdminForm = ({ onAdminAdded }) => {
         alert(data.message || "Failed to add admin");
       }
     } catch (err) {
-      alert("Error connecting to server");
+      console.log(err.message("Error connecting to server"))
     }
   };
 

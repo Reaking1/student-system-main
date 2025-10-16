@@ -13,7 +13,7 @@ const StudentForm = ({ onSuccess}) => {
 
 
     const handleSubmit = async (e) => {
-        e.prevenrtDefault();
+        e.preventDefault();
         setLoading(true);
         setErorr(null);
 

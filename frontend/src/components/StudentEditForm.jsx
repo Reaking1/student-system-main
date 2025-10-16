@@ -46,7 +46,7 @@ const StudentEditForm = ({ student, onUpdate, onClose }) => {
         alert(data.message || "Failed to update student");
       }
     } catch (err) {
-      alert("Server error while updating student");
+    console.log(err.message("Server error while updating student"))
     }
   };
 

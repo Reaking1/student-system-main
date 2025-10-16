@@ -1,42 +1,23 @@
 // src/components/AdminTable.jsx
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { deleteAdmin } from "../services/adminService";
 import "./AdminTable.css";
 
-const AdminTable = ({ onSelectAdmin }) => {
-  const [admins, setAdmins] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const fetchAdmins = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch("http://localhost/student-system/backend/api/admins/list.php");
-      const data = await res.json();
-      if (data.status === "success") setAdmins(data.admins || []);
-    } catch (err) {
-      console.error("Failed to fetch admins", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+const AdminTable = ({ admins = [], onSelectAdmin, onDelete }) => {
+  // Handle deleting an admin
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this admin?")) return;
-
     try {
-      await fetch(`http://localhost/student-system-main/backend/api/admins/delete.php?id=${id}`, {
-        method: "DELETE",
-      });
-      setAdmins((prev) => prev.filter((a) => a.id !== id));
+      await deleteAdmin(id);
+      if (onDelete) onDelete(id); // notify parent to update state
     } catch (err) {
+      console.error(err.message);
       alert("Failed to delete admin");
     }
   };
 
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
-
-  if (loading) return <p>Loading admins...</p>;
+  // If no admins, show message
+  if (!admins.length) return <p>No admins found.</p>;
 
   return (
     <div className="admin-table">
@@ -52,18 +33,20 @@ const AdminTable = ({ onSelectAdmin }) => {
           </tr>
         </thead>
         <tbody>
-          {admins.map((admin) => (
-            <tr key={admin.id}>
-              <td>{admin.id}</td>
-              <td>{admin.full_name}</td>
-              <td>{admin.email}</td>
-              <td>{admin.username}</td>
-              <td>
-                <button onClick={() => onSelectAdmin(admin)}>Edit</button>
-                <button onClick={() => handleDelete(admin.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
+          {admins.map((admin) =>
+            admin ? (
+              <tr key={admin.id}>
+                <td>{admin.id}</td>
+                <td>{admin.full_name}</td>
+                <td>{admin.email}</td>
+                <td>{admin.username}</td>
+                <td>
+                  <button onClick={() => onSelectAdmin(admin)}>Edit</button>
+                  <button onClick={() => handleDelete(admin.id)}>Delete</button>
+                </td>
+              </tr>
+            ) : null
+          )}
         </tbody>
       </table>
     </div>
