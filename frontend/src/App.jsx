@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
+import StudentDashboard from "./pages/StudentDashBoard";
 import StudentProfile from "./pages/StudentProfile";
 import Reports from "./pages/Reports";
 import { useAuth } from "./hooks/useAuth";
@@ -14,6 +15,7 @@ function App() {
     <>
       <Navbar />
       <Routes>
+        {/* Login route */}
         <Route path="/login" element={<Login />} />
 
         {/* Admin routes */}
@@ -30,6 +32,17 @@ function App() {
 
         {/* Student routes */}
         <Route
+          path="/student/dashboard"
+          element={
+            user && user.role === "student" ? (
+              <StudentDashboard student={user} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+
+        <Route
           path="/student/profile"
           element={
             user && user.role === "student" ? (
@@ -39,6 +52,7 @@ function App() {
             )
           }
         />
+
         <Route
           path="/student/reports"
           element={
@@ -54,15 +68,11 @@ function App() {
         <Route
           path="/"
           element={
-            <Navigate
-              to={
-                user
-                  ? user.role === "admin"
-                    ? "/admin/dashboard"
-                    : "/student/profile"
-                  : "/login"
-              }
-            />
+            user
+              ? user.role === "admin"
+                ? <Navigate to="/admin/dashboard" />
+                : <Navigate to="/student/dashboard" />
+              : <Navigate to="/login" />
           }
         />
 
@@ -74,3 +84,4 @@ function App() {
 }
 
 export default App;
+
