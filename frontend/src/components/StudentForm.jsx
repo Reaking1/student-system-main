@@ -1,54 +1,69 @@
-import { useState } from "react"
+import { useState } from "react";
 import { registerStudent } from "../services/studentService";
-import './StudentForm.css'
+import "./StudentForm.css";
 
-const StudentForm = ({ onSuccess}) => {
-    const [fullname, setFullName] = useState("");
-    const [studentId, setStudentId] = useState("");
-    const [email, setEmail] = useState("");
-    const [dob, setDob] = useState("");
-    const [courseId, setCourseId] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error,setErorr] = useState(false);
+const StudentForm = ({ onSuccess }) => {
+  const [form, setForm] = useState({
+    full_name: "",
+    student_id: "",
+    email: "",
+    date_of_birth: "",
+    course_id: "",
+    enrollment_date: new Date().toISOString().split("T")[0], // default today
+  });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setErorr(null);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-        try {
-            await registerStudent({
-                full_name: fullname,
-                student_id: studentId,
-                email,
-                dob,
-                course_id: courseId
-            });
-            setFullName("");
-            setStudentId("");
-            setEmail("");
-            setDob("");
-            setCourseId("");
-            if(onSuccess) onSuccess();
-        } catch (err) {
-            setErorr(err.message || "Failed to create student");
-        } finally {
-            setLoading(false)
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    return (
-         <div className="student-form">
+    try {
+      // Send the form data to the backend
+      const data = await registerStudent(form);
+
+      if (data.status === "success") {
+        alert("Student created successfully!");
+        // Reset form
+        setForm({
+          full_name: "",
+          student_id: "",
+          email: "",
+          date_of_birth: "",
+          course_id: "",
+          enrollment_date: new Date().toISOString().split("T")[0],
+        });
+        if (onSuccess) onSuccess();
+      } else {
+        setError(data.message || "Failed to create student");
+      }
+    } catch (err) {
+      console.error("Error creating student:", err);
+      setError(err.message || "Server error while creating student");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="student-form">
       <h2>Add Student</h2>
       {error && <p className="error">{error}</p>}
+
       <form onSubmit={handleSubmit}>
         <label>
           Full Name
           <input
             type="text"
-            value={fullname}
-            onChange={(e) => setFullName(e.target.value)}
+            name="full_name"
+            value={form.full_name}
+            onChange={handleChange}
             required
           />
         </label>
@@ -57,8 +72,9 @@ const StudentForm = ({ onSuccess}) => {
           Student ID
           <input
             type="text"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
+            name="student_id"
+            value={form.student_id}
+            onChange={handleChange}
             required
           />
         </label>
@@ -67,8 +83,9 @@ const StudentForm = ({ onSuccess}) => {
           Email
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={form.email}
+            onChange={handleChange}
             required
           />
         </label>
@@ -77,8 +94,9 @@ const StudentForm = ({ onSuccess}) => {
           Date of Birth
           <input
             type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
+            name="date_of_birth"
+            value={form.date_of_birth}
+            onChange={handleChange}
             required
           />
         </label>
@@ -87,8 +105,20 @@ const StudentForm = ({ onSuccess}) => {
           Course ID
           <input
             type="number"
-            value={courseId}
-            onChange={(e) => setCourseId(e.target.value)}
+            name="course_id"
+            value={form.course_id}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          Enrollment Date
+          <input
+            type="date"
+            name="enrollment_date"
+            value={form.enrollment_date}
+            onChange={handleChange}
             required
           />
         </label>
@@ -98,8 +128,7 @@ const StudentForm = ({ onSuccess}) => {
         </button>
       </form>
     </div>
-    )
-}
-
+  );
+};
 
 export default StudentForm;
