@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getStoredAuth } from "../services/authService";
-import './StudentDashboard.css'
+import "./StudentDashboard.css";
 
 export default function StudentDashboard() {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
   const auth = getStoredAuth();
+  const studentId =  auth?.user?.student_id;
+
+
 
   // --- Protect route: only for logged-in students ---
   useEffect(() => {
@@ -17,34 +19,49 @@ export default function StudentDashboard() {
     }
   }, [auth, navigate]);
 
- const studentId = auth?.user?.student_id; // use the student_id foreign key
-
-useEffect(() => {
+  // --- Fetch student profile ---
+ useEffect(() => {
   const fetchProfile = async () => {
     try {
-      const res = await fetch(`http://localhost/student-system-main/backend/api/reports/profile_report.php?id=${studentId}`, {
-        headers: { Authorization: `Bearer ${auth.token}` }
-      });
+    if (!studentId) {
+  console.error("Student ID is missing from auth object:", auth);
+  return;
+}
+
+
+const res = await fetch(
+  `http://localhost/student-system-main/backend/api/reports/profile_data.php?student_id=${studentId}`,
+  { headers: { Authorization: `Bearer ${auth.token}` } }
+);
+      if (!res.ok) {
+        console.error("Server responded with:", res.status);
+        setLoading(false);
+        return;
+      }
+
       const data = await res.json();
       if (data.status === "success") setStudent(data.student);
       else console.error("Backend error:", data.message);
     } catch (err) {
-      console.error(err);
+      console.error("Fetch error:", err);
     } finally {
       setLoading(false);
     }
   };
-  if (studentId) fetchProfile();
-}, [studentId]);
-;
+
+  fetchProfile();
+}, [studentId, auth]);
+
 
   // --- Download PDF handler ---
   const downloadPDF = (reportType) => {
+    if (!studentId) return;
+
     const base = "http://localhost/student-system-main/backend/api/reports";
     const url =
       reportType === "profile"
-        ? `${base}/profile_report.php?id=${studentId}`
-        : `${base}/registration_slip.php?id=${studentId}`;
+        ? `${base}/profile_report.php?student_id=${studentId}`
+        : `${base}/registration_slip.php?student_id=${studentId}`;
     window.open(url, "_blank");
   };
 
@@ -52,7 +69,6 @@ useEffect(() => {
   if (loading) return <p>Loading your reports...</p>;
   if (!student) return <p>No student data found.</p>;
 
-  // --- Dashboard layout ---
   return (
     <div className="student-dashboard" style={styles.container}>
       <h1 style={styles.header}>🎓 Welcome, {student.full_name}</h1>
@@ -63,7 +79,7 @@ useEffect(() => {
         <div style={styles.details}>
           <p><strong>ID:</strong> {student.student_id}</p>
           <p><strong>Email:</strong> {student.email}</p>
-          <p><strong>Date of Birth:</strong> {student.dob}</p>
+          <p><strong>Date of Birth:</strong> {student.date_of_birth}</p>
           <p><strong>Course:</strong> {student.course_name || student.course_id}</p>
           <p><strong>Enrollment Date:</strong> {student.enrollment_date}</p>
         </div>
@@ -88,7 +104,7 @@ useEffect(() => {
   );
 }
 
-// --- Inline styles for simplicity ---
+// --- Inline styles ---
 const styles = {
   container: {
     padding: "2rem",
@@ -99,8 +115,17 @@ const styles = {
     boxShadow: "0 0 10px rgba(0,0,0,0.1)",
   },
   header: { textAlign: "center", color: "#3a3a8f", marginBottom: "2rem" },
-  subHeader: { color: "#333", borderBottom: "2px solid #ddd", paddingBottom: "0.5rem" },
-  section: { marginBottom: "2rem", padding: "1rem 1.5rem", background: "#fff", borderRadius: "10px" },
+  subHeader: {
+    color: "#333",
+    borderBottom: "2px solid #ddd",
+    paddingBottom: "0.5rem",
+  },
+  section: {
+    marginBottom: "2rem",
+    padding: "1rem 1.5rem",
+    background: "#fff",
+    borderRadius: "10px",
+  },
   details: { lineHeight: "1.6" },
   button: {
     backgroundColor: "#3a3a8f",

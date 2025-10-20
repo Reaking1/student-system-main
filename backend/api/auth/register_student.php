@@ -63,7 +63,8 @@ try {
         'message' => 'Student account created successfully',
         'user' => [
             'username' => $username,
-            'role' => 'student'
+            'role' => 'student',
+            'student_id' => $student_id   // add this
         ]
     ]);
 

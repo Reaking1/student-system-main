@@ -17,7 +17,7 @@ CREATE TABLE students (
   full_name VARCHAR(255) NOT NULL,
   student_id VARCHAR(30) NOT NULL UNIQUE, -- human-readable ID
   email VARCHAR(255) NOT NULL UNIQUE,
-  dob DATE NOT NULL,
+  date_0f_birth DATE NOT NULL,
   course_id INT NOT NULL,
   enrollment_date DATE NOT NULL,
   status ENUM('ACTIVE','PENDING','INACTIVE','GRADUATED') NOT NULL DEFAULT 'PENDING',

@@ -30,10 +30,14 @@ export async function getAllStudents() {
 }
 
 // --------------------------
-// GET SINGLE STUDENT BY ID
+// GET SINGLE STUDENT BY NUMERIC ID
 // --------------------------
 export async function getStudentById(studentId) {
-  const res = await fetch(`${API_URL}/get.php?id=${studentId}`, {
+  // Ensure numeric value is passed
+  const id = Number(studentId);
+  if (isNaN(id)) throw new Error("Invalid student ID (must be numeric)");
+
+  const res = await fetch(`${API_URL}/get.php?id=${id}`, {
     headers: {
       "Content-Type": "application/json",
       ...getAuthHeader(),
@@ -51,53 +55,42 @@ export async function getStudentById(studentId) {
 // --------------------------
 // REGISTER NEW STUDENT
 // --------------------------
-// --------------------------
-// REGISTER NEW STUDENT
-// --------------------------
 export async function registerStudent(studentData) {
-  const response = await fetch(
-    "http://localhost/student-system-main/backend/api/students/create.php",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(studentData),
-    }
-  );
+  const response = await fetch(`${API_URL}/create.php`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeader() },
+    body: JSON.stringify(studentData),
+  });
 
-  let data;
-  try {
-    data = await response.json(); // parse JSON response
-  } catch {
+  const data = await response.json().catch(() => {
     throw new Error("Invalid JSON response from server (check PHP errors)");
-  }
+  });
 
   if (!response.ok || data.status !== "success") {
-    const errorMessage = data?.message || "Validation failed";
-    throw new Error(errorMessage);
+    throw new Error(data.message || "Failed to register student");
   }
 
   return data;
 }
 
-
-
-
 // --------------------------
-// UPDATE STUDENT
+// UPDATE STUDENT (Numeric ID)
 // --------------------------
 export async function updateStudent(studentId, studentData) {
-  // 🔹 Only send what backend expects (matches update.php)
+  const id = Number(studentId);
+  if (isNaN(id)) throw new Error("Invalid student ID (must be numeric)");
+
   const payload = {
     full_name: studentData.full_name,
     student_id: studentData.student_id,
     email: studentData.email,
-    date_of_birth: studentData.date_of_birth, // backend expects this key
+    date_of_birth: studentData.date_of_birth,
     course_id: studentData.course_id,
     enrollment_date: studentData.enrollment_date,
     status: studentData.status || "Active",
   };
 
-  const res = await fetch(`${API_URL}/update.php?id=${studentId}`, {
+  const res = await fetch(`${API_URL}/update.php?id=${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -106,12 +99,9 @@ export async function updateStudent(studentId, studentData) {
     body: JSON.stringify(payload),
   });
 
-  let data;
-  try {
-    data = await res.json();
-  } catch {
+  const data = await res.json().catch(() => {
     throw new Error("Invalid JSON response from server (check PHP errors)");
-  }
+  });
 
   if (!res.ok || data.status !== "success") {
     throw new Error(data.message || "Failed to update student");
@@ -121,16 +111,19 @@ export async function updateStudent(studentId, studentData) {
 }
 
 // --------------------------
-// DELETE STUDENT
+// DELETE STUDENT (Numeric ID)
 // --------------------------
 export async function deleteStudent(studentId) {
+  const id = Number(studentId);
+  if (isNaN(id)) throw new Error("Invalid student ID (must be numeric)");
+
   const res = await fetch(`${API_URL}/delete.php`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       ...getAuthHeader(),
     },
-    body: JSON.stringify({ id: studentId }),
+    body: JSON.stringify({ id }),
   });
 
   const data = await res.json();
@@ -145,11 +138,12 @@ export async function deleteStudent(studentId) {
 // DOWNLOAD PROFILE REPORT (PDF)
 // --------------------------
 export async function downloadProfileReport(studentId) {
+  const id = Number(studentId);
+  if (isNaN(id)) throw new Error("Invalid student ID (must be numeric)");
+
   const res = await fetch(
-    `${API_URL.replace("/students", "")}/reports/profile_report.php?id=${studentId}`,
-    {
-      headers: getAuthHeader(),
-    }
+    `http://localhost/student-system-main/backend/api/reports/profile_report.php?student_id=${id}`,
+    { headers: getAuthHeader() }
   );
 
   if (!res.ok) throw new Error("Failed to download PDF");
@@ -158,7 +152,7 @@ export async function downloadProfileReport(studentId) {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `Profile_${studentId}.pdf`;
+  a.download = `Profile_${id}.pdf`;
   a.click();
   window.URL.revokeObjectURL(url);
 }
